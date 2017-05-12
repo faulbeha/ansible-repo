@@ -1,0 +1,53 @@
+- name: install rvm
+  shell: curl -sSL https://rvm.io/mpapis.asc | gpg --import - ; \curl -sSL https://get.rvm.io | bash -s stable
+  become: true
+  become_user: rails
+- name: install ruby req's
+  apt:
+    name: "{{ item }}"
+  with_items:
+    - "postfix"
+    - "curl"
+    - "bzip2"
+    - "gawk"
+    - "gcc"
+    - "make"
+    - "zlib1g-dev" 
+    - "libreadline6-dev" 
+    - "libyaml-0-2" 
+    - "libyaml-dev" 
+    - "automake" 
+    - "libtool" 
+    - "libpq-dev" 
+    - "host" 
+    - "g++" 
+    - "git" 
+    - "libarchive-dev" 
+    - "libsqlite3-dev" 
+    - "sqlite3" 
+    - "libgdbm-dev" 
+    - "libncurses5-dev" 
+    - "bison" 
+    - "pkg-config" 
+    - "libffi-dev" 
+    - "libcurl4-openssl-dev" 
+    - "libxml2-dev"
+    - "libgmp3-dev"
+  sudo: yes
+- name: install ruby
+  shell: bash -lc "rvm install 2.3.1 --default"
+  become: true
+  become_user: rails
+
+- name: install ruby
+  shell: bash -lc "gem install bundler"
+  become: true
+  become_user: rails
+-name: postfix template
+  template:
+    src: /etc/ansible/roles/backend/templates/postfix.cf.j2
+    dest: /etc/postfix/main.cf
+    owner: root 
+    group: root
+    mode: "u=rw,g=r,o=r"
+  sudo: yes

@@ -1,0 +1,45 @@
+- name: Update all packages to the latest version
+  apt:
+    upgrade: dist
+
+- name: Install common system packages via apt
+  apt:
+    name: "{{ item }}"
+  with_items:
+    - "git"
+    - "sudo"
+
+- user:
+    name: dev1
+    shell: /bin/bash
+    groups: dev1,sudo
+
+- user:
+    name: dev2
+    shell: /bin/bash
+    groups: dev2,sudo
+
+- user:
+    name: admin
+    shell: /bin/bash
+    groups: admin,sudo
+
+- name: authorized_keys dev1
+  authorized_key:
+    user: dev1
+    state: present
+    key: https://github.com/dev1.keys
+    
+- name: authorized_keys dev2
+  authorized_key:
+    user: dev2
+    state: present
+    key: https://github.com/dev2.keys
+
+- name: authorized_keys admin
+  authorized_key:
+    user: admin
+    state: present
+    key: https://github.com/admin.keys
+
+

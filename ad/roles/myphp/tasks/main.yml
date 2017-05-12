@@ -1,0 +1,129 @@
+- name: upload the site directory to the docker host
+  synchronize:
+    src: roles/myphp/files/
+    dest: /tmp/myphp
+
+- name: obsolete container
+  docker:
+    image: mysql_test:mysql_test
+    state: stopped
+  when: (clean == "all" or clean == "mysql")
+
+- name: obsolete container
+  docker:
+    image: php_test:php_test
+    state: stopped
+  when: (clean == "all" or clean == "php")
+
+- name: obsolete container
+  docker:
+    image: nginx_test:nginx_test
+    state: stopped
+  when: (clean == "all" or clean == "nginx")
+
+- name: obsolete container
+  docker:
+    image: redis_test:redis_test
+    state: stopped
+  when: (clean == "all" or clean == "redis")
+
+- name: Remove image
+  docker_image:
+    force: yes
+    state: absent
+    name: mysql_test
+    tag: mysql_test
+  when: (clean == "all" or clean == "mysql")
+
+- name: Remove image
+  docker_image:
+    force: yes
+    state: absent
+    name: php_test
+    tag: php_test
+  when: (clean == "all" or clean == "php")
+
+- name: Remove image
+  docker_image:
+    force: yes
+    state: absent
+    name: nginx_test
+    tag: nginx_test
+  when: (clean == "all" or clean == "nginx")
+
+- name: Remove image
+  docker_image:
+    force: yes
+    state: absent
+    name: redis_test
+    tag: redis_test
+  when: (clean == "all" or clean == "redis")
+
+- name: build mysql
+  docker_image:
+    name: mysql_test
+    tag: mysql_test
+    dockerfile: mysql
+    path: /tmp/myphp
+    state: present
+
+- name: build php
+  docker_image:
+    name: php_test
+    tag: php_test
+    dockerfile: php7
+    path: /tmp/myphp
+    state: present
+
+- name: build nginx
+  docker_image:
+    name: nginx_test
+    tag: nginx_test
+    dockerfile: nginx
+    path: /tmp/myphp
+    state: present
+
+- name: build redis
+  docker_image:
+    name: redis_test
+    tag: redis_test
+    dockerfile: redis
+    path: /tmp/myphp
+    state: present
+
+- name: mysql
+  docker:
+    name: mysql
+    image: "mysql_test:mysql_test"
+    state: restarted
+    env:
+      MYSQL_ROOT_PASSWORD: test
+      MYSQL_DATABASE: test
+      MYSQL_USER: test
+      MYSQL_PASSWORD: test
+      MYSQL_ROOT_HOST: 172.17.0.1
+
+- name: redis
+  docker:
+    name: redis
+    image: "redis_test:redis_test"
+    state: restarted
+ 
+- name: php
+  docker:
+    name: php
+    image: "php_test:php_test"
+    state: restarted
+    links:
+    - mysql
+    - redis
+
+- name: nginx
+  docker:
+    name: nginx
+    image: "nginx_test:nginx_test"
+    state: restarted
+    links:
+    - php
+
+

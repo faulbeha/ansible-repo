@@ -1,0 +1,98 @@
+- name: Update all packages to the latest version
+  apt:
+    upgrade: dist
+    update_cache: yes
+
+- name: Install common system packages via apt
+  apt:
+    name: "{{ item }}"
+  with_items:
+    - "git"
+    - "sudo"
+    - "curl"
+
+- user:
+    name: dev1
+    shell: /bin/bash
+    groups: sudo
+
+- user:
+    name: dev2
+    shell: /bin/bash
+    groups: sudo
+
+- user:
+    name: admin
+    shell: /bin/bash
+    groups: sudo
+
+- user:
+    name: rails
+    shell: /bin/bash
+  when: "{{ groups['test'] }}"
+
+- name: authorized_keys rails
+  authorized_key:
+    user: rails
+    state: present
+    key: "https://raw.githubusercontent.com/faulbeha/ansible/master/dev1"
+
+- name: authorized_keys rails
+  authorized_key:
+    user: rails
+    state: present
+    key: "https://raw.githubusercontent.com/faulbeha/ansible/master/dev2"
+
+- name: authorized_keys rails
+  authorized_key:
+    user: rails
+    state: present
+    key: "https://raw.githubusercontent.com/faulbeha/ansible/master/admin"
+
+- name: authorized_keys dev1
+  authorized_key:
+    user: dev1
+    state: present
+    key: https://raw.githubusercontent.com/faulbeha/ansible/master/dev1
+
+- name: authorized_keys dev2
+  authorized_key:
+    user: dev2
+    state: present
+    key: https://raw.githubusercontent.com/faulbeha/ansible/master/dev2
+
+- name: authorized_keys admin
+  authorized_key:
+    user: admin
+    state: present
+    key: https://raw.githubusercontent.com/faulbeha/ansible/master/admin
+
+ - blockinfile:
+     destfile: /etc/sudoers
+     insertafter: EOF
+     content: |
+       admin ALL=(ALL,ALL)NOPASSWD:ALL
+
+# Disallow root SSH
+- lineinfile: 
+    dest: /etc/ssh/sshd_config 
+    regexp: "^PermitRootLogin" 
+    line: "PermitRootLogin no"
+    state: present
+
+# Disallow password authentication
+   
+- lineinfile: 
+    dest: /etc/ssh/sshd_config
+    regexp: "^PasswordAuthentication"
+    line: "PasswordAuthentication no"
+    state: present
+
+# Port 22 to 2345
+   
+- lineinfile: 
+    dest: /etc/ssh/sshd_config
+    regexp: "^Port 22"
+    line: "Port 2345"
+    state: present
+  notify: Restart ssh

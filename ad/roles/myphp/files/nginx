@@ -1,0 +1,12 @@
+FROM alpine:3.5
+
+RUN apk add --update nginx
+
+RUN mkdir -p /run/nginx/
+
+ADD default.conf /etc/nginx/conf.d/
+
+EXPOSE 80 443
+
+CMD nginx -g "daemon off;"
+

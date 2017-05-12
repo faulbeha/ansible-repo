@@ -1,0 +1,9 @@
+myhostname = "{{ inventory_hostname }}"
+alias_maps = hash:/etc/aliases
+alias_database = hash:/etc/aliases
+mydomain = $myhostname
+myorigin = $mydomain
+mydestination = localhost, $mydomain
+mynetworks = 127.0.0.0/8, "{{ groups["backend"] | join(",") }}"
+inet_interfaces = localhost
+relayhost = mail.local

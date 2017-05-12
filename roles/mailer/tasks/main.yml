@@ -1,0 +1,11 @@
+- name: install postfix
+  apt:
+   name: postfix
+   state: present
+- name: get config
+  template:
+   src: /etc/ansible/roles/mailer/templates/postfix.cf.j2
+   dest: /etc/postfix/main.cf
+   owner: root
+   group: root
+   mode: "u=rw,g=r,o=r"

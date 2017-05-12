@@ -1,0 +1,10 @@
+- name: Install common system packages via apt
+  apt: 
+    name: "{{ item }}"
+  with_items: 
+    - "git"
+    - "htop"
+    - "sudo"
+    - "supervisor"
+    - "sysstat"
+

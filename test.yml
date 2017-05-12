@@ -1,0 +1,9 @@
+- name: base plbk
+  hosts: 
+    - test
+  roles:
+#    - frontend
+#    - backend
+#    - base
+#    - backend
+    - db

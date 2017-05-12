@@ -1,0 +1,2 @@
+[myphp]
+localhost ansible_connection=local

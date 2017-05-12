@@ -1,0 +1,51 @@
+- name: install pgsql
+  apt:
+    name: postgresql
+    state: present
+  sudo: yes
+- name: install pgsql-contrib
+  apt:
+    name: postgresql-contrib
+    state: present
+  sudo: yes
+- name: install pip
+  shell: bash -c "cd /tmp; wget https://bootstrap.pypa.io/get-pip.py; python get-pip.py"
+  sudo: yes
+- name: pip install psycopg2 
+  pip:
+    name: psycopg2
+    state: present
+  sudo: yes
+- name: create demobase
+  postgresql_db:
+    name: demobase
+  become: true
+  become_user: postgres
+- name: create PG user demo
+  postgresql_user:
+    db: demobase
+    name: demo
+    password: demopassword
+#    priv: "CONNECT/products:ALL"
+  become: true
+  become_user: postgres
+- name: add ltree ext for damobase
+  postgresql_ext:
+    name: ltree
+    db: demobase
+  become: true
+  become_user: postgres
+- name: allow backend & frontend connection
+  template:
+    src: /etc/ansible/roles/db/templates/pg_hba.conf.j2
+    dest: /etc/postgresql/9.4/main/pg_hba.conf
+    owner: postgres
+    group: postgres
+    mode: 0640
+  sudo: yes 
+- name: daily backup db demo
+  cron:
+    name: "Create backup db demo"
+    minute: "0"
+    hour: "2"
+    job: pg_dump -U postgres demo --format=t -f /home/postres/backup/`date +\%Y\%m\%d\%H\%M\%S`_demo.sql.tar
