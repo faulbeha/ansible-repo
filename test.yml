@@ -2,8 +2,8 @@
   hosts: 
     - test
   roles:
-#    - frontend
-#    - backend
-#    - base
-#    - backend
+    - frontend
+    - backend
+    - base
     - db
+    - mailer
