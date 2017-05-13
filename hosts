@@ -2,12 +2,12 @@
 localhost ansible_connection=local 
 
 [mailer]
-mailer1 ansible_port=2345 ansible_user=admin ansible_ssh_private_key_file=/root/.ssh/admin
-mailer2 ansible_port=2345 ansible_user=admin ansible_ssh_private_key_file=/root/.ssh/admin
+mailer1 ansible_host=192.168.10.25 ansible_port=2345 ansible_user=admin ansible_ssh_private_key_file=/root/.ssh/admin
+mailer2 ansible_host=192.168.10.26 ansible_port=2345 ansible_user=admin ansible_ssh_private_key_file=/root/.ssh/admin
 
 [db]
-db1 ansible_port=2345 ansible_user=admin ansible_ssh_private_key_file=/root/.ssh/admin
-db2 ansible_port=2345 ansible_user=admin ansible_ssh_private_key_file=/root/.ssh/admin
+db1 ansible_host=192.168.10.60 ansible_port=2345 ansible_user=admin ansible_ssh_private_key_file=/root/.ssh/admin
+db2 ansible_host=192.168.10.61 ansible_port=2345 ansible_user=admin ansible_ssh_private_key_file=/root/.ssh/admin
 
 [backend]
 backend1.local ansible_host=192.168.10.198 ansible_port=2345 ansible_user=admin ansible_ssh_private_key_file=/root/.ssh/admin
@@ -15,6 +15,3 @@ backend2.local ansible_host=192.168.10.199 ansible_port=2345 ansible_user=admin 
 
 [frontend]
 frontend1.local ansible_host=192.168.10.200 ansible_port=2345 ansible_user=admin ansible_ssh_private_key_file=/root/.ssh/admin
-
-[test]
-192.168.10.156 ansible_port=2345 ansible_user=admin ansible_ssh_private_key_file=/root/.ssh/admin
