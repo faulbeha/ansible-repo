@@ -1,0 +1,5 @@
+- name: DB plbk
+  hosts: 
+    - db
+  roles:
+    - db

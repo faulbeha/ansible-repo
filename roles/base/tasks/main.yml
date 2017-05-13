@@ -67,10 +67,10 @@
     state: present
     key: https://raw.githubusercontent.com/faulbeha/ansible/master/admin
 
- - blockinfile:
-     destfile: /etc/sudoers
-     insertafter: EOF
-     content: |
+- blockinfile:
+    destfile: /etc/sudoers
+    insertafter: EOF
+    content: |
        admin ALL=(ALL,ALL)NOPASSWD:ALL
 
 # Disallow root SSH

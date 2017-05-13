@@ -1,6 +1,0 @@
-- name: Latest stable Docker
-  sudo: yes
-  hosts:
-    - myphp
-  roles:
-    - myphp
